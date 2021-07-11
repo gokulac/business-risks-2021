@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Business Risk Analysis</title>
+
+
+    <style>
+            #container {
+            height: 400px; 
+            min-width: 310px; 
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+
+    <div id="container"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+
+    <!-- Custom script comes here-->
+    <script>
+
+    $( document ).ready(function() {
+            // console.log( "ready!" );
+
+            get_data();
+    });
+
+    function get_data(){
+
+        url = "/api/data"
+
+        var myusername = $("#username").val();
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: myusername,
+            cache: false,
+            success: function(data){
+                // $("#resultResponses").text(data);
+                console.log(data);
+
+                plot_chart(data);
+            }
+        });
+    } //- get data
+
+
+    function plot_chart(data){
+
+      // Create the chart
+Highcharts.chart('container', {
+    colors: ['#FFD700', '#C0C0C0', '#CD7F32'],
+    chart: {
+        type: 'column',
+        inverted: true,
+        polar: true
+    },
+    title: {
+        text: 'Business Risk Analysis'
+    },
+    subtitle: {
+        text: 'Representation is Business Risks in 2021'
+    },
+    accessibility: {
+        announceNewData: {
+            enabled: true
+        }
+    },
+    xAxis: {
+        tickInterval: 1,
+        labels: {
+            align: 'right',
+            useHTML: true,
+            allowOverlap: true,
+            step: 1,
+            y: 3,
+            style: {
+                fontSize: '13px'
+            }
+        },
+        lineWidth: 0,
+
+        type: 'category'
+    },
+        title: {
+            text: 'Business Risks'
+        },
+
+   
+    yAxis: {
+        crosshair: {
+            enabled: true,
+            color: '#333'
+        },
+        lineWidth: 0,
+        tickInterval: 25,
+        reversedStacks: false,
+        endOnTick: true,
+        showLastLabel: true
+    },
+    plotOptions: {
+        column: {
+            stacking: 'normal',
+            borderWidth: 0,
+            pointPadding: 0,
+            groupPadding: 0.15
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> <br/>'
+    },
+    pane: {
+        size: '85%',
+        innerSize: '20%',
+        endAngle: 270
+    },
+
+    series: [
+        {
+            name: "Business Risk Analysis",
+            colorByPoint: true,
+            data: data['data_list']
+        }
+    ],
+    
+});
+
+        }
+</script>
+
+</body>
+
+</html>
